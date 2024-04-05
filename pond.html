@@ -17,17 +17,21 @@
     </ul>
 
     <div id="pond"></div>
-
+    <script src="configuration.js"></script>
     <script>
-      let host = "http://localhost:8080";
-      let ducks = [];
-      displayTheDucks();
+    let host = configuration.host();
+    let ducks = [];
+    displayTheDucks();
 
-      async function getAll() {
-        let response = await fetch(host + "/ducks");
+    async function getAll() {
+        const headers = { "Authorization": `Bearer ${configuration.token()}` };
+        let response = await fetch(host + "/ducks", { headers });
+        if (response.status == 401) {
+        logout();
+      }
         let result = await response.json();
         return result;
-      }
+    }
 
       async function displayTheDucks() {
         if (ducks.length == 0) {
